@@ -4,8 +4,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 import org.apache.http.annotation.Obsolete;
+import org.bf2.cos.fleet.manager.client.ClientConfig;
 import org.bf2.cos.fleetshard.support.Service;
 import org.bf2.cos.fleetshard.support.client.EventClient;
 import org.bf2.cos.fleetshard.support.resources.Resources;
@@ -32,10 +34,17 @@ public class AddonReaper implements Housekeeper.Task, Service {
     public static final String CLEANUP_EVENT_REASON = "CleaningUpResources";
     public static final String FAILED_CLEANUP_EVENT_REASON = "FailedToCleanUpResources";
 
-    private final KubernetesClient kubernetesClient;
-    private final FleetShardSyncConfig config;
-    private final FleetShardSync fleetShardSync;
-    private final FleetShardObservabilityClient observabilityClient;
+    @Inject
+    KubernetesClient kubernetesClient;
+    @Inject
+    ClientConfig clientConfig;
+    @Inject
+    FleetShardSyncConfig config;
+    @Inject
+    FleetShardSync fleetShardSync;
+    @Inject
+    FleetShardObservabilityClient observabilityClient;
+
     private final ConfigMapWatcher watcher;
     private final AtomicLong retries;
     private final AtomicBoolean running;
@@ -140,7 +149,7 @@ public class AddonReaper implements Housekeeper.Task, Service {
     }
 
     private FilterWatchListDeletable<Namespace, NamespaceList> getNamespaceFilter() {
-        return kubernetesClient.namespaces().withLabel(Resources.LABEL_CLUSTER_ID, config.cluster().id());
+        return kubernetesClient.namespaces().withLabel(Resources.LABEL_CLUSTER_ID, clientConfig.cluster().id());
     }
 
     private class ConfigMapWatcher extends AbstractWatcher<ConfigMap> {

@@ -308,6 +308,22 @@ public class ConnectorNamespaceProvisioner {
         }
 
         boolean quota = hasQuota(connectorNamespace);
+        Namespace ns = createNamespace(connectorNamespace, uow, state, quota);
+
+        fleetShard.createNamespace(ns);
+
+        if (quota) {
+            LOGGER.debug("Creating LimitRange for namespace: {}", ns.getMetadata().getName());
+            createResourceLimit(uow, connectorNamespace);
+
+            LOGGER.debug("Creating ResourceQuota for namespace: {}", ns.getMetadata().getName());
+            createResourceQuota(uow, connectorNamespace);
+        }
+
+        copyAddonPullSecret(uow, ns);
+    }
+
+    private Namespace createNamespace(ConnectorNamespace connectorNamespace, String uow, String state, boolean quota) {
         Namespace ns = new Namespace();
 
         KubernetesResourceUtil.getOrCreateMetadata(ns)
@@ -334,17 +350,7 @@ public class ConnectorNamespaceProvisioner {
             Resources.ANNOTATION_NAMESPACE_EXPIRATION, connectorNamespace.getExpiration(),
             Resources.ANNOTATION_NAMESPACE_QUOTA, Boolean.toString(quota));
 
-        fleetShard.createNamespace(ns);
-
-        if (quota) {
-            LOGGER.debug("Creating LimitRange for namespace: {}", ns.getMetadata().getName());
-            createResourceLimit(uow, connectorNamespace);
-
-            LOGGER.debug("Creating ResourceQuota for namespace: {}", ns.getMetadata().getName());
-            createResourceQuota(uow, connectorNamespace);
-        }
-
-        copyAddonPullSecret(uow, ns);
+        return ns;
     }
 
     private boolean hasQuota(ConnectorNamespaceDeployment connectorNamespace) {

@@ -19,9 +19,6 @@ spec:
     - jsonPath: .spec.connectorId
       name: CONNECTOR_ID
       type: string
-    - jsonPath: .spec.deployment.connectorTypeId
-      name: CONNECTOR_TYPE_ID
-      type: string
     - jsonPath: .spec.deploymentId
       name: DEPLOYMENT_ID
       type: string

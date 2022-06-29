@@ -1,4 +1,4 @@
-package org.bf2.cos.fleetshard.sync.metrics;
+package org.bf2.cos.fleetshard.support.metrics;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ import io.micrometer.core.instrument.Tag;
 @Singleton
 public class MetricsProducers {
     @Inject
-    FleetShardSyncConfig config;
+    MetricsConfig config;
     @Inject
     MeterRegistry registry;
 
@@ -40,8 +40,8 @@ public class MetricsProducers {
         }
 
         String id = named.value();
-        if (!id.startsWith(config.metrics().baseName() + ".")) {
-            id = config.metrics().baseName() + "." + id;
+        if (!id.startsWith(config.baseName() + ".")) {
+            id = config.baseName() + "." + id;
         }
 
         return MetricsRecorder.of(

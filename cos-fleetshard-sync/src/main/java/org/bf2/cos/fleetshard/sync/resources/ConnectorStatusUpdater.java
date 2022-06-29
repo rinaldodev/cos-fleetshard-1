@@ -10,7 +10,6 @@ import org.bf2.cos.fleet.manager.model.ConnectorDeploymentStatus;
 import org.bf2.cos.fleetshard.api.ManagedConnector;
 import org.bf2.cos.fleetshard.sync.FleetShardSyncConfig;
 import org.bf2.cos.fleetshard.sync.client.FleetManagerClient;
-import org.bf2.cos.fleetshard.sync.client.FleetManagerClientException;
 import org.bf2.cos.fleetshard.sync.client.FleetShardClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +72,7 @@ public class ConnectorStatusUpdater {
                     break;
             }
 
-        } catch (FleetManagerClientException e) {
+        } catch (RestClientException e) {
             if (e.getStatusCode() == 410) {
                 LOGGER.info("Connector " + connector.getMetadata().getName() + " does not exists anymore, deleting it");
                 if (connectorClient.deleteConnector(connector)) {

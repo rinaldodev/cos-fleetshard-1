@@ -39,6 +39,8 @@ public class ConnectorStatusSync implements Service {
     @Inject
     FleetShardSyncConfig config;
     @Inject
+    MetricsConfig metricsConfig;
+    @Inject
     FleetShardSyncScheduler scheduler;
 
     @Inject
