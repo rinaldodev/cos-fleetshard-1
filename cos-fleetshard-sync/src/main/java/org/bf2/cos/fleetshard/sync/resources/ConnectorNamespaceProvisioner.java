@@ -15,6 +15,7 @@ import org.bf2.cos.fleet.manager.model.ConnectorNamespaceState;
 import org.bf2.cos.fleet.manager.model.MetaV1Condition;
 import org.bf2.cos.fleetshard.api.Conditions;
 import org.bf2.cos.fleetshard.support.client.EventClient;
+import org.bf2.cos.fleetshard.support.metrics.MetricsID;
 import org.bf2.cos.fleetshard.support.metrics.MetricsRecorder;
 import org.bf2.cos.fleetshard.support.resources.NamespacedName;
 import org.bf2.cos.fleetshard.support.resources.Namespaces;
@@ -22,7 +23,6 @@ import org.bf2.cos.fleetshard.support.resources.Resources;
 import org.bf2.cos.fleetshard.sync.FleetShardSyncConfig;
 import org.bf2.cos.fleetshard.sync.client.FleetManagerClient;
 import org.bf2.cos.fleetshard.sync.client.FleetShardClient;
-import org.bf2.cos.fleetshard.sync.metrics.MetricsID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -323,7 +323,7 @@ public class ConnectorNamespaceProvisioner {
         copyAddonPullSecret(uow, ns);
     }
 
-    private Namespace createNamespace(ConnectorNamespace connectorNamespace, String uow, String state, boolean quota) {
+    private Namespace createNamespace(ConnectorNamespaceDeployment connectorNamespace, String uow, String state, boolean quota) {
         Namespace ns = new Namespace();
 
         KubernetesResourceUtil.getOrCreateMetadata(ns)

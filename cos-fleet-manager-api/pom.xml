@@ -104,7 +104,7 @@
                             <generateModels>true</generateModels>
                             <generateApis>false</generateApis>
                             <templateDirectory>${project.basedir}/src/openapi/templates</templateDirectory>
-                        </configuration>
+                        </configuration>ConnectorNamespace
                     </execution>
                     <execution>
                         <id>generate-fleet-manager-api</id>

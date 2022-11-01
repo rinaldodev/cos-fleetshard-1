@@ -1,21 +1,17 @@
 package org.bf2.cos.fleetshard.operator.service.observability;
 
-import java.util.List;
-
 import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.javaoperatorsdk.operator.api.reconciler.Context;
-import io.javaoperatorsdk.operator.api.reconciler.DeleteControl;
-import io.javaoperatorsdk.operator.api.reconciler.EventSourceContext;
-import io.javaoperatorsdk.operator.api.reconciler.EventSourceInitializer;
-import io.javaoperatorsdk.operator.api.reconciler.Reconciler;
-import io.javaoperatorsdk.operator.api.reconciler.UpdateControl;
+import io.javaoperatorsdk.operator.api.reconciler.*;
 import io.javaoperatorsdk.operator.processing.event.source.EventSource;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ObservabilityController implements Reconciler<ConfigMap>, EventSourceInitializer<ConfigMap> {
 
     @Override
-    public List<EventSource> prepareEventSources(EventSourceContext context) {
-        return List.of();
+    public Map<String, EventSource> prepareEventSources(EventSourceContext context) {
+        return Map.of();
     }
 
     @Override
@@ -23,8 +19,4 @@ public class ObservabilityController implements Reconciler<ConfigMap>, EventSour
         return UpdateControl.noUpdate();
     }
 
-    @Override
-    public DeleteControl cleanup(ConfigMap resource, Context context) {
-        return Reconciler.super.cleanup(resource, context);
-    }
 }

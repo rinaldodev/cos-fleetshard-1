@@ -44,20 +44,15 @@ public class AddonReaper implements Housekeeper.Task, Service {
     FleetShardSync fleetShardSync;
     @Inject
     FleetShardObservabilityClient observabilityClient;
+    @Inject
+    EventClient eventClient;
 
     private final ConfigMapWatcher watcher;
     private final AtomicLong retries;
     private final AtomicBoolean running;
     private final AtomicBoolean taskRunning;
-    private final EventClient eventClient;
 
-    public AddonReaper(KubernetesClient kubernetesClient, FleetShardSyncConfig config, FleetShardSync fleetShardSync,
-        FleetShardObservabilityClient observabilityClient, EventClient eventClient) {
-        this.kubernetesClient = kubernetesClient;
-        this.config = config;
-        this.fleetShardSync = fleetShardSync;
-        this.observabilityClient = observabilityClient;
-        this.eventClient = eventClient;
+    public AddonReaper() {
         this.watcher = new ConfigMapWatcher();
         this.retries = new AtomicLong(0);
         this.running = new AtomicBoolean();
@@ -113,7 +108,7 @@ public class AddonReaper implements Housekeeper.Task, Service {
 
         eventClient.broadcastNormal(CLEANUP_EVENT_REASON,
             "Deleting all namespaces that belong to cluster {}. Try #{}",
-            config.cluster().id(), retries);
+            clientConfig.cluster().id(), retries);
         getNamespaceFilter().delete();
 
         eventClient.broadcastNormal(CLEANUP_EVENT_REASON, "Asking for Observability clean up");
@@ -192,7 +187,7 @@ public class AddonReaper implements Housekeeper.Task, Service {
                 eventClient.broadcastNormal(CLEANUP_EVENT_REASON,
                     "ConfigMap for deletion of the Addon was found, starting cleanup of cluster: %s - %s",
                     configMap,
-                    config.cluster().id(),
+                    clientConfig.cluster().id(),
                     configMap);
                 try {
                     fleetShardSync.stopResourcesSync();
